@@ -1,0 +1,55 @@
+# Copyright © Ecomteck (ecomteck@gmail.com). All rights reserved.
+# Please visit Ecomteck.com for license details (https://www.ecomteck.com/LICENSE.txt).
+
+type Query {
+    getMegamenu (
+        id: Int @doc(description: "Id of the menu")
+    ): MenuInterface @resolver(class: "Ecomteck\\MegamenuGraphQl\\Model\\Resolver\\Menu")
+
+    getMenuNode (
+        id: Int @doc(description: "Id of the menu")
+    ): NodeInterface @resolver(class: "Ecomteck\\MegamenuGraphQl\\Model\\Resolver\\Node")
+
+    getMenuNodes (
+        filter: NodeFilterInput @doc(description: "Identifies which node attributes to search for and return."),
+        pageSize: Int = 5 @doc(description: "Specifies the maximum number of results to return at once. This attribute is optional."),
+        currentPage: Int = 1 @doc(description: "Specifies which page of results to return. The default value is 1."),
+    ): MenuNodes @resolver(class: "Ecomteck\\MegamenuGraphQl\\Model\\Resolver\\Nodes")
+}
+
+type MenuInterface {
+    menu_id: Int @doc(description: "An ID that uniquely identifies the menu")
+    title: String @doc(description: "The display title of the menu")
+    identifier: String @doc(description: "The indentifier of the menu")
+    css_class: String @doc(description: "The css class of the menu")
+    creation_time: String @doc(description: "Timestamp indicating when the menu was created")
+    update_time: String @doc(description: "Timestamp indicating when the menu was updated")
+    is_active: Int @doc(description: "Menu status")
+}
+
+type NodeInterface {
+    node_id: Int @doc(description: "An ID that uniquely identifies the node")
+    menu_id: Int @doc(description: "An ID that uniquely identifies the menu")
+    type: String @doc(description: "The node type")
+    content: String @doc(description: "The node content")
+    classes: String @doc(description: "The node classes")
+    parent_id: Int @doc(description: "The node parent id")
+    position: Int @doc(description: "The node position")
+    level: Int @doc(description: "The node level")
+    title: String @doc(description: "The node title")
+    target: Int @doc(description: "The node target")
+    creation_time: String @doc(description: "Timestamp indicating when the node was created")
+    update_time: String @doc(description: "Timestamp indicating when the node was updated")
+    is_active: Int @doc(description: "Node status")
+}
+
+input NodeFilterInput @doc(description: "NodeFilterInput defines the filters to be used in the search. A filter contains at least one attribute, a comparison operator, and the value that is being searched for.") {
+    menu_id: FilterTypeInput @doc(description: "menu id")
+    is_active: FilterTypeInput @doc(description: "node status id")
+    parent_id: FilterTypeInput @doc(description: "The node parent id")
+}
+
+type MenuNodes @doc(description: "The menu node object is the top-level object returned in a node search") {
+    total_count:  Int @doc(description: "The number of nodes returned")
+    nodes: [NodeInterface] @doc(description: "An array of nodes that match the specified search criteria")
+}
